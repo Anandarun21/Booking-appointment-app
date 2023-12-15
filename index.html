@@ -15,14 +15,20 @@
                 const name = event.target.username.value;
                 const email = event.target.emailid.value;
                 const phonenumber = event.target.Phonenumber.value; 
+
+                // Create an object with user details
                 const user = {
                     name: name,
                     email: email,
                     phonenumber: phonenumber
                 };
 
-                // Convert the object to a string and store it in local storage
-                localStorage.setItem('user', JSON.stringify(user));}
+                // Use the email as a unique identifier for each user
+                const userKey = `${email}`;
+
+                // Convert the object to a string and store it in local storage with a unique key
+                localStorage.setItem(userKey, JSON.stringify(user));
+            }
         </script>
     </body>
 </html>
