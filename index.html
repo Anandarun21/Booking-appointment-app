@@ -15,10 +15,14 @@
                 const name = event.target.username.value;
                 const email = event.target.emailid.value;
                 const phonenumber = event.target.Phonenumber.value; 
-                localStorage.setItem('name', name);
-                localStorage.setItem('email', email);
-                localStorage.setItem('phonenumber', phonenumber);
-            }
+                const user = {
+                    name: name,
+                    email: email,
+                    phonenumber: phonenumber
+                };
+
+                // Convert the object to a string and store it in local storage
+                localStorage.setItem('user', JSON.stringify(user));}
         </script>
     </body>
 </html>
