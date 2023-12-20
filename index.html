@@ -9,6 +9,9 @@
             <input type="tel" name="Phonenumber" />
             <button>submit</button>
         </form>
+
+        <div id="output"></div>
+
         <script>
             function saveToLocalStorage(event){
                 event.preventDefault();
@@ -16,19 +19,44 @@
                 const email = event.target.emailid.value;
                 const phonenumber = event.target.Phonenumber.value; 
 
-                // Create an object with user details
                 const user = {
                     name: name,
                     email: email,
                     phonenumber: phonenumber
                 };
 
-                // Use the email as a unique identifier for each user
-                const userKey = `${email}`;
-
-                // Convert the object to a string and store it in local storage with a unique key
+                const userKey = `user_${email}`;
                 localStorage.setItem(userKey, JSON.stringify(user));
+
+                displaySubmittedValues();
             }
+
+            function displaySubmittedValues() {
+                document.getElementById('output').innerHTML = '<ul>';
+
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const userData = JSON.parse(localStorage.getItem(key));
+
+                    // Display user data in bullet points with a delete button
+                    document.getElementById('output').innerHTML += `
+                        <li>${userData.name} - ${userData.email} - ${userData.phonenumber}
+                            <button onclick="deleteUser('${key}')">Delete</button>
+                        </li>
+                    `;
+                }
+
+                document.getElementById('output').innerHTML += '</ul>';
+            }
+
+            function deleteUser(key) {
+                // Remove the user entry from local storage
+                localStorage.removeItem(key);
+                // Update the displayed values
+                displaySubmittedValues();
+            }
+
+            displaySubmittedValues();
         </script>
     </body>
 </html>
