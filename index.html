@@ -38,15 +38,32 @@
                     const key = localStorage.key(i);
                     const userData = JSON.parse(localStorage.getItem(key));
 
-                    // Display user data in bullet points with a delete button
+                    // Display user data in bullet points with "Edit" and "Delete" buttons
                     document.getElementById('output').innerHTML += `
                         <li>${userData.name} - ${userData.email} - ${userData.phonenumber}
+                            <button onclick="editUser('${key}')">Edit</button>
                             <button onclick="deleteUser('${key}')">Delete</button>
                         </li>
                     `;
                 }
 
                 document.getElementById('output').innerHTML += '</ul>';
+            }
+
+            function editUser(key) {
+                // Retrieve user data from local storage
+                const userData = JSON.parse(localStorage.getItem(key));
+
+                // Populate the input fields with the retrieved data
+                document.getElementsByName('username')[0].value = userData.name;
+                document.getElementsByName('emailid')[0].value = userData.email;
+                document.getElementsByName('Phonenumber')[0].value = userData.phonenumber;
+
+                // Remove the user entry from local storage
+                localStorage.removeItem(key);
+                
+                // Update the displayed values
+                displaySubmittedValues();
             }
 
             function deleteUser(key) {
