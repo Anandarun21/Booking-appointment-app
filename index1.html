@@ -13,8 +13,10 @@
         <div id="output"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
         <script>
-            // Check if data has already been loaded
-            const dataLoaded = localStorage.getItem('dataLoaded');
+            document.addEventListener('DOMContentLoaded', function () {
+                // Fetch and display user details when the DOM has loaded
+                displaySubmittedValues();
+            });
 
             function saveToCloud(event){
                 event.preventDefault();
@@ -39,11 +41,6 @@
             }
 
             function displaySubmittedValues() {
-                // If data has already been loaded, exit the function
-                if (dataLoaded) {
-                    return;
-                }
-
                 // Fetch data from the cloud instead of local storage
                 axios.get("https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment")
                      .then((response) => {
@@ -62,9 +59,6 @@
                         }
 
                         document.getElementById('output').innerHTML += '</ul>';
-
-                        // Set the local storage flag to indicate that data has been loaded
-                        localStorage.setItem('dataLoaded', 'true');
                      })
                      .catch((err)=>{
                         console.log(err);
@@ -99,9 +93,6 @@
                         console.log(err);
                      });
             }
-
-            // Initial display of data from the cloud
-            displaySubmittedValues();
         </script>
     </body>
 </html>
