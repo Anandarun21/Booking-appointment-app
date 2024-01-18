@@ -1,0 +1,107 @@
+<html>
+    <body>
+        <form onsubmit="saveToCloud(event)">
+            <label>name</label>
+            <input type="text" name="username" required/>
+            <label>email</label>
+            <input type="email" name="emailid" required/>
+            <label>Phone Number</label>
+            <input type="tel" name="Phonenumber" />
+            <button>submit</button>
+        </form>
+
+        <div id="output"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
+        <script>
+            // Check if data has already been loaded
+            const dataLoaded = localStorage.getItem('dataLoaded');
+
+            function saveToCloud(event){
+                event.preventDefault();
+                const name = event.target.username.value;
+                const email = event.target.emailid.value;
+                const phonenumber = event.target.Phonenumber.value; 
+
+                const user = {
+                    name: name,
+                    email: email,
+                    phonenumber: phonenumber
+                };
+
+                axios.post("https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment", user)
+                     .then((response) => {
+                        console.log(response);
+                        displaySubmittedValues(); // Fetch and display data after successfully saving to the cloud
+                     })
+                     .catch((err)=>{
+                        console.log(err);
+                     });
+            }
+
+            function displaySubmittedValues() {
+                // If data has already been loaded, exit the function
+                if (dataLoaded) {
+                    return;
+                }
+
+                // Fetch data from the cloud instead of local storage
+                axios.get("https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment")
+                     .then((response) => {
+                        const dataFromCloud = response.data;
+                        document.getElementById('output').innerHTML = '<ul>';
+
+                        // Display data from the cloud
+                        for (const key in dataFromCloud) {
+                            const userData = dataFromCloud[key];
+                            document.getElementById('output').innerHTML += `
+                                <li>${userData.name} - ${userData.email} - ${userData.phonenumber}
+                                    <button onclick="editUser('${key}', '${userData.name}', '${userData.email}', '${userData.phonenumber}')">Edit</button>
+                                    <button onclick="deleteUser('${key}')">Delete</button>
+                                </li>
+                            `;
+                        }
+
+                        document.getElementById('output').innerHTML += '</ul>';
+
+                        // Set the local storage flag to indicate that data has been loaded
+                        localStorage.setItem('dataLoaded', 'true');
+                     })
+                     .catch((err)=>{
+                        console.log(err);
+                     });
+            }
+
+            function editUser(key, name, email, phonenumber) {
+                // Populate the input fields with the data for editing
+                document.getElementsByName('username')[0].value = name;
+                document.getElementsByName('emailid')[0].value = email;
+                document.getElementsByName('Phonenumber')[0].value = phonenumber;
+
+                // Implement the update logic here if needed
+
+                // For demonstration purposes, let's remove the user entry after editing
+                axios.delete(`https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment/${key}`)
+                     .then(() => {
+                        displaySubmittedValues(); // Fetch and display updated data after editing
+                     })
+                     .catch((err) => {
+                        console.log(err);
+                     });
+            }
+
+            function deleteUser(key) {
+                // Remove the user entry from the cloud
+                axios.delete(`https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment/${key}`)
+                     .then(() => {
+                        displaySubmittedValues(); // Fetch and display updated data after deleting
+                     })
+                     .catch((err) => {
+                        console.log(err);
+                     });
+            }
+
+            // Initial display of data from the cloud
+            displaySubmittedValues();
+        </script>
+    </body>
+</html>
