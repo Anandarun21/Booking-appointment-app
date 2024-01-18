@@ -13,11 +13,6 @@
         <div id="output"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Fetch and display user details when the DOM has loaded
-                displaySubmittedValues();
-            });
-
             function saveToCloud(event){
                 event.preventDefault();
                 const name = event.target.username.value;
@@ -30,10 +25,10 @@
                     phonenumber: phonenumber
                 };
 
-                axios.post("https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment", user)
+                axios.post("https://crudcrud.com/api/a16f26a0bc024a789245dee118fe24f8/bookingappointment", user)
                      .then((response) => {
                         console.log(response);
-                        displaySubmittedValues(); // Fetch and display data after successfully saving to the cloud
+                        displaySubmittedValues();
                      })
                      .catch((err)=>{
                         console.log(err);
@@ -41,18 +36,16 @@
             }
 
             function displaySubmittedValues() {
-                // Fetch data from the cloud instead of local storage
-                axios.get("https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment")
+                axios.get("https://crudcrud.com/api/a16f26a0bc024a789245dee118fe24f8/bookingappointment")
                      .then((response) => {
                         const dataFromCloud = response.data;
                         document.getElementById('output').innerHTML = '<ul>';
 
-                        // Display data from the cloud
                         for (const key in dataFromCloud) {
                             const userData = dataFromCloud[key];
                             document.getElementById('output').innerHTML += `
                                 <li>${userData.name} - ${userData.email} - ${userData.phonenumber}
-                                    <button onclick="editUser('${key}', '${userData.name}', '${userData.email}', '${userData.phonenumber}')">Edit</button>
+                                    <button onclick="editUser('${key}')">Edit</button>
                                     <button onclick="deleteUser('${key}')">Delete</button>
                                 </li>
                             `;
@@ -65,18 +58,39 @@
                      });
             }
 
-            function deleteUser(key) {
-    console.log("Deleting user with key:", key);
+            function editUser(key) {
+                const newName = prompt("Enter new name:");
+                const newEmail = prompt("Enter new email:");
+                const newPhoneNumber = prompt("Enter new phone number:");
 
-    axios.delete(`https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment/${key}`)
-         .then(() => {
-            console.log("User deleted successfully");
-            displaySubmittedValues(); // Fetch and display updated data after deleting
-         })
-         .catch((err) => {
-            console.error("Error deleting user:", err);
-         });
-}
+                const updatedUser = {
+                    name: newName,
+                    email: newEmail,
+                    phonenumber: newPhoneNumber
+                };
+
+                axios.put(`https://crudcrud.com/api/a16f26a0bc024a789245dee118fe24f8/bookingappointment`, updatedUser)
+                     .then((response) => {
+                        console.log(response);
+                        displaySubmittedValues();
+                     })
+                     .catch((err)=>{
+                        console.log(err);
+                     });
+            }
+
+            function deleteUser(key) {
+                axios.delete(`https://crudcrud.com/api/a16f26a0bc024a789245dee118fe24f8/bookingappointment`)
+                     .then((response) => {
+                        console.log(response);
+                        displaySubmittedValues();
+                     })
+                     .catch((err)=>{
+                        console.log(err);
+                     });
+            }
+
+            displaySubmittedValues();
         </script>
     </body>
 </html>
