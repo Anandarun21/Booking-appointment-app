@@ -65,34 +65,18 @@
                      });
             }
 
-            function editUser(key, name, email, phonenumber) {
-                // Populate the input fields with the data for editing
-                document.getElementsByName('username')[0].value = name;
-                document.getElementsByName('emailid')[0].value = email;
-                document.getElementsByName('Phonenumber')[0].value = phonenumber;
-
-                // Implement the update logic here if needed
-
-                // For demonstration purposes, let's remove the user entry after editing
-                axios.delete(`https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment/${key}`)
-                     .then(() => {
-                        displaySubmittedValues(); // Fetch and display updated data after editing
-                     })
-                     .catch((err) => {
-                        console.log(err);
-                     });
-            }
-
             function deleteUser(key) {
-                // Remove the user entry from the cloud
-                axios.delete(`https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment/${key}`)
-                     .then(() => {
-                        displaySubmittedValues(); // Fetch and display updated data after deleting
-                     })
-                     .catch((err) => {
-                        console.log(err);
-                     });
-            }
+    console.log("Deleting user with key:", key);
+
+    axios.delete(`https://crudcrud.com/api/70aad70ac66e4d70a91ad752955a5b04/bookingappointment/${key}`)
+         .then(() => {
+            console.log("User deleted successfully");
+            displaySubmittedValues(); // Fetch and display updated data after deleting
+         })
+         .catch((err) => {
+            console.error("Error deleting user:", err);
+         });
+}
         </script>
     </body>
 </html>
